@@ -1,3 +1,8 @@
+# node_modules folder
 node_modules/
 
+# .env config file
 .env
+
+# nodemon config
+nodemon.json
