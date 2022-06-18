@@ -5,13 +5,12 @@ const { socketController } = require('../sockets/socket.controller');
 
 class Server {
     
-    constructor( routes = [] ) {
-        this.routes = routes;
+    constructor() {
+
         this.app = express();
         this.port = process.env.PORT || 3001;
         this.server = require('http').createServer(this.app);
         this.io = require('socket.io')(this.server);
-
 
         // Middlewares
         this.middlewares();
