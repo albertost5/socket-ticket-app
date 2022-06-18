@@ -14,7 +14,7 @@ const socketController = socket => {
     });
 
     socket.on( 'disconnect', () => {
-       
+
     });
 
     socket.on( 'next-ticket', ( payload, callback ) => {
@@ -24,6 +24,28 @@ const socketController = socket => {
         callback( next )
 
         // TO DO: There is a new ticket to be attended.
+    });
+
+    // Payload: { desktop: 'Desktop 1' }
+    socket.on( 'attend-ticket', ({ desktop }, callback ) => {
+   
+        if( !desktop ) {
+            return callback({
+                error: 'The desktop field is required!'
+            });
+        }
+
+        const TICKET = ticketControl.attendTicket( desktop );
+
+        // TO DO: notify change 
+
+        if( !TICKET ) {
+            return callback({
+                error: 'There is not tickets to attend.'
+            });
+        } else {
+            callback( TICKET );
+        }
     });
 }
 
