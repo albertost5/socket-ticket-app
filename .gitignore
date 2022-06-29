@@ -8,4 +8,4 @@ node_modules/
 nodemon.json
 
 #db
-db/*.json
+db/**.*
