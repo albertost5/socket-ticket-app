@@ -1,7 +1,10 @@
 const path = require('path');
 const fs = require('fs');
+const { dirname } = require('path');
 
 class TicketControl {
+
+    #dbPath = path.join( __dirname, '../../../db/data.json' );
 
     constructor( ) {
         this.last = 0;
@@ -22,24 +25,33 @@ class TicketControl {
     }
 
     init() {
-        const { last, currentDate, tickets, lastFourTickets } = require('../../../db/data.json');
-        
-        // Current day 
-        if( currentDate == this.currentDate ) {
-            this.last = last
-            this.tickets = tickets;
-            this.lastFourTickets = lastFourTickets;
-        // Different day
+        if( fs.existsSync( this.#dbPath ) ) {
+
+            const { last, currentDate, tickets, lastFourTickets } = require('../../../db/data.json');
+            
+            // Current day 
+            if( currentDate == this.currentDate ) {
+                this.last = last
+                this.tickets = tickets;
+                this.lastFourTickets = lastFourTickets;
+            // Different day
+            } else {
+                this.saveDb();
+            }
         } else {
-            this.saveDb();
+            if( !fs.existsSync( this.#dbPath ) ) {
+                fs.mkdirSync( path.join( __dirname, '../../../db') );
+            } else{
+                console.log('noexistefolderr');
+            }
+            fs.writeFileSync('db/data.json', JSON.stringify( this.toJson ) );
         }
+
     }
 
     saveDb() {
-        const dbPath = path.join( __dirname, '../../../db/data.json' );
-        
         // Restart the properties or load the ones from the JSON if it's the same day
-        fs.writeFileSync( dbPath, JSON.stringify( this.toJson ) );
+        fs.writeFileSync( this.#dbPath, JSON.stringify( this.toJson ) );
     }
 
     nextTicket() {
