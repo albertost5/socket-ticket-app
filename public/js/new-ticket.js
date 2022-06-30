@@ -1,10 +1,10 @@
 console.log('New ticket HTML');
 
+const socket = io();
+
 // HTML references
 const LBL_NEW_TICKET = document.querySelector('#lblNewTicket');
 const BTN_CREATE = document.querySelector('button');
-
-const socket = io();
 
 
 socket.on('connect', () => {

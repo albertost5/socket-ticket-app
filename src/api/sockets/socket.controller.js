@@ -6,24 +6,23 @@ const socketController = socket => {
 
     console.log(`Client ${ socket.id } connected..`);
 
-    // Last ticket event
+    /** When a new client is connected:
+     *  - last-ticket
+     *  - current-status ( last four tickets)
+     *  - current-tickets ( pending tickets to be attended) 
+     * */ 
     socket.emit( 'last-ticket', ticketControl.last );
-    
-    socket.on( 'connection', () => {
-        
-    });
+    socket.emit( 'current-status', ticketControl.lastFourTickets );
+    socket.emit( 'current-tickets', ticketControl.tickets.length );
 
-    socket.on( 'disconnect', () => {
-
-    });
 
     socket.on( 'next-ticket', ( payload, callback ) => {
        
         // Return string: Ticket: 10.
         const next = ticketControl.nextTicket();
-        callback( next )
+        callback( next );
 
-        // TO DO: There is a new ticket to be attended.
+        socket.broadcast.emit( 'pending-tickets', ticketControl.tickets.length );
     });
 
     // Payload: { desktop: 'Desktop 1' }
@@ -35,9 +34,15 @@ const socketController = socket => {
             });
         }
 
+        // Get the ticket after update the array of the last 4 tickets.
         const TICKET = ticketControl.attendTicket( desktop );
 
-        // TO DO: notify change 
+        // Notify change to the desktop.html broadcasting the event to send emit it from new-ticket.html to desktop.html
+        socket.broadcast.emit( 'current-status', ticketControl.lastFourTickets );
+        
+        // Pending tickets
+        socket.emit( 'pending-tickets', ticketControl.tickets.length );
+        socket.broadcast.emit( 'pending-tickets', ticketControl.tickets.length );
 
         if( !TICKET ) {
             return callback({

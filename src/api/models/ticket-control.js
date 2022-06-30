@@ -39,12 +39,14 @@ class TicketControl {
                 this.saveDb();
             }
         } else {
-            if( !fs.existsSync( this.#dbPath ) ) {
-                fs.mkdirSync( path.join( __dirname, '../../../db') );
-            } else{
-                console.log('noexistefolderr');
+            const DB_FOLDER = path.join( __dirname, '../../../db');
+
+            if( !fs.existsSync( DB_FOLDER ) ) {
+                fs.mkdirSync( DB_FOLDER );
+                fs.writeFileSync('db/data.json', JSON.stringify( this.toJson ) );
+            } else {
+                fs.writeFileSync('db/data.json', JSON.stringify( this.toJson ) );
             }
-            fs.writeFileSync('db/data.json', JSON.stringify( this.toJson ) );
         }
 
     }
