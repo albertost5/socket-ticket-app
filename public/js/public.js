@@ -14,6 +14,9 @@ const lblDesktop4 = document.querySelector('#lblDesktop4');
 
 socket.on( 'current-status', ( lastTicketsArr ) => {
 
+    const audio = new Audio('./audio/new-ticket.mp3');
+    audio.play();
+
     const [ ticket1, ticket2, ticket3, ticket4 ] = lastTicketsArr;
 
     if( ticket1 ){
